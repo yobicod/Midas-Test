@@ -16,7 +16,7 @@ function getClockAngle(hh_mm: string): number {
 }
 
 // TEST_02
-export function getQuestionPart(phrases: string[]): string[] {
+function getQuestionPart(phrases: string[]): string[] {
   const possibleAnswer: string[] = [];
 
   phrases.forEach((phrase) => {
@@ -47,6 +47,54 @@ function findMaxLengthString(arr: string[]): string {
     }
   }
   return maxLengthString;
+}
+
+type Board = {
+  ladders: [number, number][];
+  snakes: [number, number][];
+};
+
+// quickest path snake game
+function quickestPath(board: Board): number[] {
+  const { ladders, snakes } = board;
+  const visited = new Map<number, number>();
+
+  const queue: [number[], number][] = [[[], 1]]; // Start from position 1
+
+  while (queue.length > 0) {
+    const [path, currentPosition] = queue.shift()!;
+    const currentRolls = path.length;
+
+    if (
+      !visited.has(currentPosition) ||
+      visited.get(currentPosition)! > currentRolls
+    ) {
+      visited.set(currentPosition, currentRolls);
+
+      if (currentPosition === 100) {
+        return path;
+      }
+
+      for (let roll = 1; roll <= 6; roll++) {
+        const nextPosition = currentPosition + roll;
+
+        let nextPath = [...path, roll];
+        const connection = ladders
+          .concat(snakes)
+          .find(([start]) => start === nextPosition);
+        const connectedPosition = connection ? connection[1] : nextPosition;
+
+        if (
+          !visited.has(connectedPosition) ||
+          visited.get(connectedPosition)! > nextPath.length
+        ) {
+          queue.push([nextPath, connectedPosition]);
+        }
+      }
+    }
+  }
+
+  return [];
 }
 
 // TEST_04
