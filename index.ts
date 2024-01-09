@@ -50,7 +50,7 @@ function findMaxLengthString(arr: string[]): string {
 }
 
 // TEST_04
-export function minEnergy(
+function minEnergy(
   start: number,
   shops: number[],
   stations: number[],
