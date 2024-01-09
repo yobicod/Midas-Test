@@ -48,3 +48,31 @@ function findMaxLengthString(arr: string[]): string {
   }
   return maxLengthString;
 }
+
+// TEST_04
+export function minEnergy(
+  start: number,
+  shops: number[],
+  stations: number[],
+  target: number
+): number {
+  const reachableNode: number[] = [...shops, ...stations, target];
+
+  reachableNode.sort((a, b) => a - b);
+
+  let energy = 0;
+  let current = start;
+
+  for (let i = 0; i < reachableNode.length; i++) {
+    const distance = Math.abs(current - reachableNode[i]);
+    const energyCost =
+      stations.includes(current) && stations.includes(reachableNode[i])
+        ? 0
+        : distance;
+
+    energy += energyCost;
+    current = reachableNode[i];
+  }
+
+  return energy - 1;
+}
