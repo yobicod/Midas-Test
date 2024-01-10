@@ -54,7 +54,7 @@ type Board = {
   snakes: [number, number][];
 };
 
-// quickest path snake game
+// TEST_03
 function quickestPath(board: Board): number[] {
   const { ladders, snakes } = board;
   const visited = new Map<number, number>();
@@ -101,26 +101,26 @@ function quickestPath(board: Board): number[] {
 function minEnergy(
   start: number,
   shops: number[],
-  stations: number[],
+  busStops: number[],
   target: number
 ): number {
-  const reachableNode: number[] = [...shops, ...stations, target];
+  const energySoFar: number[] = new Array(target + 1).fill(Infinity);
+  energySoFar[start] = 0;
 
-  reachableNode.sort((a, b) => a - b);
+  for (let i = start + 1; i <= target; i++) {
+    energySoFar[i] = Math.min(energySoFar[i], energySoFar[i - 1] + 1);
 
-  let energy = 0;
-  let current = start;
+    for (const busStop of busStops) {
+      if (busStop <= i && i - busStop <= 2) {
+        const busCost = energySoFar[busStop] + 1;
+        energySoFar[i] = Math.min(energySoFar[i], busCost);
+      }
+    }
 
-  for (let i = 0; i < reachableNode.length; i++) {
-    const distance = Math.abs(current - reachableNode[i]);
-    const energyCost =
-      stations.includes(current) && stations.includes(reachableNode[i])
-        ? 0
-        : distance;
-
-    energy += energyCost;
-    current = reachableNode[i];
+    if (shops.includes(i)) {
+      energySoFar[i] = Math.min(energySoFar[i], energySoFar[i - 1] + 1);
+    }
   }
 
-  return energy - 1;
+  return energySoFar[target];
 }
