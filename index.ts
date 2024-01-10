@@ -101,7 +101,7 @@ function quickestPath(board: Board): number[] {
 function minEnergy(
   start: number,
   shops: number[],
-  busStops: number[],
+  stations: number[],
   target: number
 ): number {
   const energySoFar: number[] = new Array(target + 1).fill(Infinity);
@@ -110,7 +110,7 @@ function minEnergy(
   for (let i = start + 1; i <= target; i++) {
     energySoFar[i] = Math.min(energySoFar[i], energySoFar[i - 1] + 1);
 
-    for (const busStop of busStops) {
+    for (const busStop of stations) {
       if (busStop <= i && i - busStop <= 2) {
         const busCost = energySoFar[busStop] + 1;
         energySoFar[i] = Math.min(energySoFar[i], busCost);
